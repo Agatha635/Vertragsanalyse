@@ -2,7 +2,7 @@ import streamlit as st
 
 # 🔹 Seite konfigurieren (muss als erstes kommen!)
 st.set_page_config(
-    page_title="Bauverträge smarter machen",
+    page_title="st.markdown("<h1 style='text-align: center; font-size: 50px; color: #008CBA;'>Bauverträge smarter machen</h1>", unsafe_allow_html=True),
     page_icon="🏗",
     layout="wide",
     initial_sidebar_state="expanded"
