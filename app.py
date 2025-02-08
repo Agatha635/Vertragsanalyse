@@ -46,12 +46,8 @@ genai.configure(api_key=API_KEY)
 if st.button("🔎 Vertrag analysieren"):
     if contract_text.strip():  # 🟢 Prüfen, ob Text vorhanden ist
         model = genai.GenerativeModel("gemini-pro")
-        prompt = f"""Analysiere den folgenden Bauvertrag nach folgenden Rechtsgrundlagen:
-        - BGB-Bauvertragsrecht
-        - HOAI (Honorarordnung für Architekten und Ingenieure)
-        - VOB (Vergabe- und Vertragsordnung für Bauleistungen)
-        - Bauordnungsrecht der Länder
-        - BauFordSiG (BauFordSiG)
-        - MaBV (Makler- und Bauträgerverordnung)
-        
-        Bitte identifizie
+        prompt = (
+            "Analysiere den folgenden Bauvertrag nach folgenden Rechtsgrundlagen:\n"
+            "- BGB-Bauvertragsrecht\n"
+            "- HOAI (Honorarordnung für Architekten und Ingenieure)\n"
+            "- VOB (Vergabe- und Vertrag
