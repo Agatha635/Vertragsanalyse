@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# 🔹 Logo anzeigen (falls vorhanden)
+# 🔹 Logo anzeigen
 st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
 
 # 🔹 Titel zentrieren & größer machen
@@ -46,13 +46,6 @@ st.markdown(
             border-radius: 5px;
             padding: 5px;
         }
-        .title {
-            font-size: 36px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
     </style>
     """,
     unsafe_allow_html=True
@@ -69,7 +62,7 @@ with col2:
     st.subheader("📝 Manuelle Eingabe")
     contract_text = st.text_area("Hier den Vertragstext eingeben", height=200)
 
-# 🔹 API-Schlüssel aus Streamlit-Secrets laden (SICHERHEIT!)
+# 🔹 API-Schlüssel für die KI (Sicherheit verbessern)
 api_key = st.secrets["AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"]
 genai.configure(api_key=api_key)
 
