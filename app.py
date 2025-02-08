@@ -1,4 +1,37 @@
 import streamlit as st
+
+# 🌙 Dark Mode aktivieren & Primärfarbe ändern
+st.set_page_config(
+    page_title="Bauverträge smarter machen",
+    page_icon="🏗",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
+
+# Farben für Buttons & Text anpassen
+st.markdown(
+    """
+    <style>
+        body {
+            color: #ffffff;
+            background-color: #1E1E1E;
+        }
+        .stButton>button {
+            background-color: #008CBA;
+            color: white;
+            border-radius: 5px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        .stTextInput>div>div>input {
+            background-color: #333333;
+            color: white;
+        }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+import streamlit as st
 import google.generativeai as genai
 
 # API-Schlüssel für Google Gemini KI
