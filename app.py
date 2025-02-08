@@ -1,6 +1,5 @@
 import streamlit as st
 import google.generativeai as genai
-import pdfplumber  # 📄 Zum Extrahieren von Text aus PDFs
 
 # 🔹 Streamlit-Seitenkonfiguration (muss als erstes kommen!)
 st.set_page_config(
@@ -64,36 +63,36 @@ col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("🔍 Vertrag hochladen")
-    uploaded_file = st.file_uploader("Lade einen Vertrag als PDF oder Text hoch", type=["pdf", "txt"])
+    uploaded_file = st.file_uploader("Lade einen Vertrag als Text hoch", type=["txt"])
 
 with col2:
     st.subheader("📝 Manuelle Eingabe")
     contract_text = st.text_area("Hier den Vertragstext eingeben", height=200)
 
-# 🔹 Text aus PDF extrahieren, falls eine Datei hochgeladen wurde
-if uploaded_file is not None:
-    if uploaded_file.type == "application/pdf":
-        try:
-            with pdfplumber.open(uploaded_file) as pdf:
-                contract_text = "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
-            st.success("✅ Text aus PDF extrahiert!")
-        except Exception as e:
-            st.error(f"❌ Fehler beim Extrahieren des Textes: {e}")
-    else:
-        contract_text = uploaded_file.getvalue().decode("utf-8")
-
-# 🔹 API-Schlüssel für Google Gemini KI
-api_key = "AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"  # 🔑 Hier deinen API-Schlüssel einfügen!
+# 🔹 API-Schlüssel aus Streamlit-Secrets laden (SICHERHEIT!)
+api_key = st.secrets["AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"]
 genai.configure(api_key=api_key)
 
 # 🔹 KI-Analyse starten
 if st.button("🔎 Vertrag analysieren"):
     if contract_text:
         model = genai.GenerativeModel("gemini-pro")
-        prompt = f"Bitte überprüfe den folgenden Bauvertrag und schlage Verbesserungen vor:\n\n{contract_text}"
+        prompt = f"""
+        Analysiere den folgenden Bauvertrag gemäß den folgenden rechtlichen Grundlagen:
+        - BGB (§§ 631 ff. Werkvertrag & Bauvertragsrecht §§ 650a ff.)
+        - HOAI (Honorarordnung für Architekten und Ingenieure)
+        - VOB/B (Vergabe- und Vertragsordnung für Bauleistungen, Teil B & C)
+        - Bauordnungsrecht der Länder
+        - BauFordSiG (Gesetz über die Sicherung der Bauforderungen)
+        - MaBV (Makler- und Bauträgerverordnung)
+        
+        Identifiziere potenzielle Probleme, Verstöße oder unklare Regelungen und schlage konkrete Verbesserungen vor.
+        
+        Vertragstext:
+        {contract_text}
+        """
         response = model.generate_content(prompt)
         st.subheader("🔹 KI-Analyse & Verbesserungsvorschläge:")
         st.write(response.text)
     else:
         st.warning("⚠️ Bitte lade eine Datei hoch oder gib einen Vertrag ein!")
-
