@@ -8,7 +8,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# 🔹 Logo anzeigen
+# 🔹 Logo anzeigen (falls vorhanden)
 st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
 
 # 🔹 Titel zentrieren & größer machen
@@ -46,6 +46,13 @@ st.markdown(
             border-radius: 5px;
             padding: 5px;
         }
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
     """,
     unsafe_allow_html=True
@@ -62,9 +69,8 @@ with col2:
     st.subheader("📝 Manuelle Eingabe")
     contract_text = st.text_area("Hier den Vertragstext eingeben", height=200)
 
-# 🔹 API-Schlüssel für die KI (Sicherheit verbessern)
-api_key = st.secrets["AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"]
-genai.configure(api_key=api_key)
+# 🔹 API-Schlüssel direkt im Code setzen (nur für Tests!)
+genai.configure(api_key="DEIN_API_KEY_HIER")  # Ersetze "AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ" mit deinem echten API-Schlüssel
 
 # 🔹 KI-Analyse starten
 if st.button("🔎 Vertrag analysieren"):
@@ -76,3 +82,4 @@ if st.button("🔎 Vertrag analysieren"):
         st.write(response.text)
     else:
         st.warning("⚠️ Bitte lade eine Datei hoch oder gib einen Vertrag ein!")
+
