@@ -1,6 +1,6 @@
 import streamlit as st
 
-# ✅ Die Seitenkonfiguration muss als erstes stehen!
+# ✅ WICHTIG: st.set_page_config MUSS direkt nach den Imports kommen!
 st.set_page_config(
     page_title="Bauverträge smarter machen",
     page_icon="🏗",
@@ -8,10 +8,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# ✅ Logo anzeigen
+# ✅ Jetzt erst das Logo anzeigen!
 st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
 
-# ✅ Farben für Dark Mode & Buttons anpassen
+# ✅ Dark Mode & Design anpassen
 st.markdown(
     """
     <style>
@@ -35,12 +35,12 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ✅ Titel und Einführung
+# ✅ Titel und Einführungstext
 st.title("Bauverträge smarter machen")
 st.write("Willkommen zu deiner KI-gestützten Vertragsanalyse!")
 
+# Hier kommt dein restlicher Code...
 # Dein bestehender Code (Chat-Funktion, Upload etc.) kommt hier...
-import streamlit as st
 import google.generativeai as genai
 
 # API-Schlüssel für Google Gemini KI
