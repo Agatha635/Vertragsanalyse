@@ -78,6 +78,8 @@ elif analyse_tiefe == "Detaillierte Analyse":
     - BauFordSiG (§ 1 BauFordSiG)
     - MaBV (§§ 1-16 MaBV)
 
+    Gib konkrete Verbesserungsvorschläge mit Bezug auf die jeweiligen Vorschriften.
+
     Vertragstext:
     {contract_text}
     """
