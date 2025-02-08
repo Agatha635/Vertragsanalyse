@@ -1,5 +1,6 @@
 import streamlit as st
 import google.generativeai as genai
+import pdfplumber  # 📄 Zum Extrahieren von Text aus PDFs
 
 # 🔹 Streamlit-Seitenkonfiguration (muss als erstes kommen!)
 st.set_page_config(
@@ -46,13 +47,6 @@ st.markdown(
             border-radius: 5px;
             padding: 5px;
         }
-        .title {
-            font-size: 36px;
-            font-weight: bold;
-            color: #333;
-            text-align: center;
-            margin-bottom: 20px;
-        }
     </style>
     """,
     unsafe_allow_html=True
@@ -70,11 +64,25 @@ with col2:
     contract_text = st.text_area("Hier den Vertragstext eingeben", height=200)
 
 # 🔹 API-Schlüssel direkt im Code setzen (nur für Tests!)
-genai.configure(api_key="DEIN_API_KEY_HIER")  # Ersetze "AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ" mit deinem echten API-Schlüssel
+genai.configure(api_key="AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ")  # Ersetze "DEIN_API_KEY_HIER" mit deinem echten API-Schlüssel
+
+# 🔹 Funktion zum Extrahieren von Text aus PDFs
+def extract_text_from_pdf(pdf_file):
+    text = ""
+    with pdfplumber.open(pdf_file) as pdf:
+        for page in pdf.pages:
+            text += page.extract_text() + "\n"
+    return text
 
 # 🔹 KI-Analyse starten
 if st.button("🔎 Vertrag analysieren"):
-    if contract_text:
+    if uploaded_file:  # Falls eine Datei hochgeladen wurde
+        if uploaded_file.type == "application/pdf":
+            contract_text = extract_text_from_pdf(uploaded_file)
+        else:
+            contract_text = uploaded_file.read().decode("utf-8")
+
+    if contract_text:  # Falls ein Vertragstext vorhanden ist
         model = genai.GenerativeModel("gemini-pro")
         prompt = f"Bitte überprüfe den folgenden Bauvertrag und schlage Verbesserungen vor:\n\n{contract_text}"
         response = model.generate_content(prompt)
@@ -82,4 +90,3 @@ if st.button("🔎 Vertrag analysieren"):
         st.write(response.text)
     else:
         st.warning("⚠️ Bitte lade eine Datei hoch oder gib einen Vertrag ein!")
-
