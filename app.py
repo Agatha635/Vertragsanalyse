@@ -1,7 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 🔹 Streamlit-Seitenkonfiguration (muss als erstes kommen!)
+# 🔹 Streamlit-Seitenkonfiguration
 st.set_page_config(
     page_title="Bauverträge smarter machen",
     page_icon="🏗",
@@ -11,7 +11,7 @@ st.set_page_config(
 # 🔹 Logo anzeigen (falls vorhanden)
 st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
 
-# 🔹 Titel zentrieren & größer machen
+# 🔹 Titel
 st.markdown(
     """
     <h1 style='text-align: center; font-size: 50px; color: #008CBA;'>
@@ -21,7 +21,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# 🔹 Spalten-Layout für bessere Struktur
+# 🔹 Spalten-Layout
 col1, col2 = st.columns(2)
 
 with col1:
@@ -32,8 +32,8 @@ with col2:
     st.subheader("📝 Manuelle Eingabe")
     contract_text = st.text_area("Hier den Vertragstext eingeben", height=200)
 
-# 🔹 API-Schlüssel für die KI (lokal direkt setzen, nicht über st.secrets)
-api_key = "AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"  # Ersetze durch deinen echten API-Schlüssel
+# 🔹 API-Schlüssel (lokale Nutzung)
+api_key = "AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"  # Ersetze mit deinem echten API-Schlüssel
 genai.configure(api_key=api_key)
 
 # 🔹 Auswahl der Analyse-Tiefe
@@ -44,19 +44,15 @@ analyse_tiefe = st.radio(
 
 # 🔹 Dynamischer Prompt je nach Auswahl
 if analyse_tiefe == "Basis-Analyse":
-    prompt = f"Analysiere den Vertrag allgemein auf Verständlichkeit, Vollständigkeit und eventuelle Unklarheiten."
+    prompt = f"Analysiere den folgenden Bauvertrag allgemein auf Verständlichkeit, Vollständigkeit und eventuelle Unklarheiten:\n\n{contract_text}"
 
 elif analyse_tiefe == "Erweiterte Analyse":
-    prompt = f"""
-    Analysiere den Vertrag basierend auf folgenden Rechtsgrundlagen:
-    - BGB-Bauvertragsrecht
-    - HOAI (Honorarordnung für Architekten und Ingenieure)
-    - VOB (Vergabe- und Vertragsordnung für Bauleistungen)
-    - Bauordnungsrecht der Länder
-    - BauFordSiG (Bauforderungssicherungsgesetz)
-    - MaBV (Makler- und Bauträgerverordnung)
-    """
-
-elif analyse_tiefe == "Detaillierte Analyse":
-    prompt = f"""
-    Erstelle eine tiefgehend
+    prompt = (
+        f"Analysiere den folgenden Bauvertrag basierend auf diesen Rechtsgrundlagen:\n"
+        f"- BGB-Bauvertragsrecht\n"
+        f"- HOAI (Honorarordnung für Architekten und Ingenieure)\n"
+        f"- VOB (Vergabe- und Vertragsordnung für Bauleistungen)\n"
+        f"- Bauordnungsrecht der Länder\n"
+        f"- BauFordSiG (Bauforderungssicherungsgesetz)\n"
+        f"- MaBV (Makler- und Bauträgerverordnung)\n\n"
+        f"Vertragstext:\n{contract
