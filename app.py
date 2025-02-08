@@ -72,21 +72,6 @@ import google.generativeai as genai
 # API-Schlüssel für Google Gemini KI
 genai.configure(api_key="AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ")
 
-st.title("🔍 KI-gestützte Vertragsanalyse")
-st.write("Lade einen Bauvertrag hoch oder gib ihn manuell ein, um Verbesserungsvorschläge zu erhalten.")
-
-# Datei-Upload
-uploaded_file = st.file_uploader("Lade eine Textdatei hoch", type=["txt"])
-
-# Falls Datei hochgeladen wird, lese den Inhalt
-vertragstext = ""
-if uploaded_file is not None:
-    vertragstext = uploaded_file.read().decode("utf-8")
-    st.text_area("📜 Vertragstext:", vertragstext, height=200)
-
-# Alternativ: Manueller Texteingabe
-else:
-    vertragstext = st.text_area("Oder gib deinen Vertrag hier ein:", height=200)
 
 # KI-Analyse starten
 if st.button("🔎 Vertrag analysieren"):
