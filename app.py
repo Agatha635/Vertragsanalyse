@@ -7,6 +7,9 @@ st.set_page_config(
     layout="wide"
 )
 
+# Logo anzeigen (falls vorhanden)
+st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
+
 # Überschrift zentrieren & größer machen
 st.markdown(
     """
@@ -17,9 +20,9 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# Beispieltext
+st.write("Willkommen zur Vertragsanalyse-App!")
+
 
 # 🔹 Benutzerdefiniertes Styling mit CSS
 st.markdown(
