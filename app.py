@@ -1,14 +1,17 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 🔹 Streamlit-Seitenkonfiguration
+# 🔹 Streamlit-Seitenkonfiguration (muss als erstes kommen!)
 st.set_page_config(
     page_title="Bauverträge smarter machen",
     page_icon="🏗",
     layout="wide"
 )
 
-# 🔹 Titel & Design
+# 🔹 Logo anzeigen (falls vorhanden)
+st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
+
+# 🔹 Titel zentrieren & größer machen
 st.markdown(
     """
     <h1 style='text-align: center; font-size: 50px; color: #008CBA;'>
@@ -18,50 +21,42 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# 🔹 Datei-Upload oder manuelle Texteingabe
+# 🔹 Spalten-Layout für bessere Struktur
 col1, col2 = st.columns(2)
 
 with col1:
     st.subheader("🔍 Vertrag hochladen")
-    uploaded_file = st.file_uploader("Lade einen Vertrag als Text hoch", type=["txt"])
-
-    if uploaded_file is not None:
-        contract_text = uploaded_file.read().decode("utf-8")  # 🟢 Text aus Datei lesen
-    else:
-        contract_text = ""
+    uploaded_file = st.file_uploader("Lade einen Vertrag als PDF oder Text hoch", type=["pdf", "txt"])
 
 with col2:
     st.subheader("📝 Manuelle Eingabe")
-    manual_text = st.text_area("Hier den Vertragstext eingeben", height=200)
+    contract_text = st.text_area("Hier den Vertragstext eingeben", height=200)
 
-# Falls manuelle Eingabe vorhanden, diese priorisieren
-if manual_text:
-    contract_text = manual_text
+# 🔹 API-Schlüssel für die KI (lokal direkt setzen, nicht über st.secrets)
+api_key = "AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"  # Ersetze durch deinen echten API-Schlüssel
+genai.configure(api_key=api_key)
 
-# 🔹 API-Schlüssel direkt im Code setzen (Nur für lokale Tests!)
-API_KEY = "AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"
-genai.configure(api_key=API_KEY)
+# 🔹 Auswahl der Analyse-Tiefe
+analyse_tiefe = st.radio(
+    "🔍 Wähle die Tiefe der Vertragsanalyse:",
+    ("Basis-Analyse", "Erweiterte Analyse", "Detaillierte Analyse")
+)
 
-# 🔹 KI-Analyse starten
-if st.button("🔎 Vertrag analysieren"):
-    if contract_text.strip():  # 🟢 Prüfen, ob Text vorhanden ist
-        model = genai.GenerativeModel("gemini-pro")
-        prompt = f"""
-        Analysiere den folgenden Bauvertrag unter Berücksichtigung der folgenden Rechtsgrundlagen:
-        - BGB-Bauvertragsrecht
-        - HOAI (Honorarordnung für Architekten und Ingenieure)
-        - VOB (Vergabe- und Vertragsordnung für Bauleistungen)
-        - Bauordnungsrecht der Länder
-        - BauFordSiG (Gesetz zur Sicherung von Bauverträgen)
-        - MaBV (Makler- und Bauträgerverordnung)
+# 🔹 Dynamischer Prompt je nach Auswahl
+if analyse_tiefe == "Basis-Analyse":
+    prompt = f"Analysiere den Vertrag allgemein auf Verständlichkeit, Vollständigkeit und eventuelle Unklarheiten."
 
-        Identifiziere mögliche Probleme und gib konkrete Verbesserungsvorschläge mit Paragraphenangaben aus den genannten Regelwerken:
+elif analyse_tiefe == "Erweiterte Analyse":
+    prompt = f"""
+    Analysiere den Vertrag basierend auf folgenden Rechtsgrundlagen:
+    - BGB-Bauvertragsrecht
+    - HOAI (Honorarordnung für Architekten und Ingenieure)
+    - VOB (Vergabe- und Vertragsordnung für Bauleistungen)
+    - Bauordnungsrecht der Länder
+    - BauFordSiG (Bauforderungssicherungsgesetz)
+    - MaBV (Makler- und Bauträgerverordnung)
+    """
 
-        {contract_text}
-        """
-
-        response = model.generate_content(prompt)
-        st.subheader("🔹 KI-Analyse & Verbesserungsvorschläge:")
-        st.write(response.text)
-    else:
-        st.warning("⚠️ Bitte lade eine Datei hoch oder gib einen Vertrag ein!")
+elif analyse_tiefe == "Detaillierte Analyse":
+    prompt = f"""
+    Erstelle eine tiefgehend
