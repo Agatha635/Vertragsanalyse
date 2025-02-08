@@ -1,16 +1,17 @@
 import streamlit as st
+import google.generativeai as genai
 
-# Streamlit-Seitenkonfiguration (muss als erstes kommen!)
+# 🔹 Streamlit-Seitenkonfiguration (muss als erstes kommen!)
 st.set_page_config(
     page_title="Bauverträge smarter machen",
     page_icon="🏗",
     layout="wide"
 )
 
-# Logo anzeigen (falls vorhanden)
+# 🔹 Logo anzeigen (falls vorhanden)
 st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
 
-# Überschrift zentrieren & größer machen
+# 🔹 Titel zentrieren & größer machen
 st.markdown(
     """
     <h1 style='text-align: center; font-size: 50px; color: #008CBA;'>
@@ -19,10 +20,6 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
-
-# Beispieltext
-st.write("Willkommen zur Vertragsanalyse-App!")
-
 
 # 🔹 Benutzerdefiniertes Styling mit CSS
 st.markdown(
@@ -61,10 +58,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# 🔹 Logo und Titel
-st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
-st.markdown("<p class='title'>Bauverträge smarter machen</p>", unsafe_allow_html=True)
-
 # 🔹 Spalten-Layout für bessere Struktur
 col1, col2 = st.columns(2)
 
@@ -76,24 +69,15 @@ with col2:
     st.subheader("📝 Manuelle Eingabe")
     contract_text = st.text_area("Hier den Vertragstext eingeben", height=200)
 
+# 🔹 API-Schlüssel aus Streamlit-Secrets laden (SICHERHEIT!)
+api_key = st.secrets["AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"]
+genai.configure(api_key=api_key)
+
 # 🔹 KI-Analyse starten
-if st.button("🚀 Vertrag analysieren"):
-    st.success("✅ Analyse läuft... (Hier könnte deine KI-Antwort erscheinen)")
-
-
-# Hier kommt dein restlicher Code...
-# Dein bestehender Code (Chat-Funktion, Upload etc.) kommt hier...
-import google.generativeai as genai
-
-# API-Schlüssel für Google Gemini KI
-genai.configure(api_key="AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ")
-
-
-# KI-Analyse starten
 if st.button("🔎 Vertrag analysieren"):
-    if vertragstext:
+    if contract_text:
         model = genai.GenerativeModel("gemini-pro")
-        prompt = f"Bitte überprüfe den folgenden Bauvertrag und schlage Verbesserungen vor:\n\n{vertragstext}"
+        prompt = f"Bitte überprüfe den folgenden Bauvertrag und schlage Verbesserungen vor:\n\n{contract_text}"
         response = model.generate_content(prompt)
         st.subheader("🔹 KI-Analyse & Verbesserungsvorschläge:")
         st.write(response.text)
