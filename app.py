@@ -44,15 +44,50 @@ analyse_tiefe = st.radio(
 
 # 🔹 Dynamischer Prompt je nach Auswahl
 if analyse_tiefe == "Basis-Analyse":
-    prompt = f"Analysiere den folgenden Bauvertrag allgemein auf Verständlichkeit, Vollständigkeit und eventuelle Unklarheiten:\n\n{contract_text}"
+    prompt = f"""
+    Analysiere den folgenden Bauvertrag allgemein auf Verständlichkeit, Vollständigkeit und eventuelle Unklarheiten:
+
+    Vertragstext:
+    {contract_text}
+    """
 
 elif analyse_tiefe == "Erweiterte Analyse":
-    prompt = (
-        f"Analysiere den folgenden Bauvertrag basierend auf diesen Rechtsgrundlagen:\n"
-        f"- BGB-Bauvertragsrecht\n"
-        f"- HOAI (Honorarordnung für Architekten und Ingenieure)\n"
-        f"- VOB (Vergabe- und Vertragsordnung für Bauleistungen)\n"
-        f"- Bauordnungsrecht der Länder\n"
-        f"- BauFordSiG (Bauforderungssicherungsgesetz)\n"
-        f"- MaBV (Makler- und Bauträgerverordnung)\n\n"
-        f"Vertragstext:\n{contract
+    prompt = f"""
+    Analysiere den folgenden Bauvertrag basierend auf diesen Rechtsgrundlagen:
+
+    - BGB-Bauvertragsrecht
+    - HOAI (Honorarordnung für Architekten und Ingenieure)
+    - VOB (Vergabe- und Vertragsordnung für Bauleistungen)
+    - Bauordnungsrecht der Länder
+    - BauFordSiG (Bauforderungssicherungsgesetz)
+    - MaBV (Makler- und Bauträgerverordnung)
+
+    Vertragstext:
+    {contract_text}
+    """
+
+elif analyse_tiefe == "Detaillierte Analyse":
+    prompt = f"""
+    Erstelle eine tiefgehende Analyse des Bauvertrags. Identifiziere mögliche rechtliche Risiken 
+    und mache konkrete Verbesserungsvorschläge basierend auf diesen Rechtsquellen mit Paragrafenangaben:
+
+    - BGB-Bauvertragsrecht (§§ 631 ff. BGB)
+    - HOAI (§§ 1-16 HOAI)
+    - VOB (VOB/B, VOB/C)
+    - Bauordnungsrecht (je nach Bundesland)
+    - BauFordSiG (§ 1 BauFordSiG)
+    - MaBV (§§ 1-16 MaBV)
+
+    Vertragstext:
+    {contract_text}
+    """
+
+# 🔹 KI-Analyse starten
+if st.button("🔎 Vertrag analysieren"):
+    if contract_text:
+        model = genai.GenerativeModel("gemini-pro")
+        response = model.generate_content(prompt)
+        st.subheader("🔹 KI-Analyse & Verbesserungsvorschläge:")
+        st.write(response.text)
+    else:
+        st.warning("⚠️ Bitte lade eine Datei hoch oder gib einen Vertrag ein!")
