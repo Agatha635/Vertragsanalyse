@@ -47,6 +47,13 @@ st.markdown(
             border-radius: 5px;
             padding: 5px;
         }
+        .title {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+            margin-bottom: 20px;
+        }
     </style>
     """,
     unsafe_allow_html=True
@@ -63,26 +70,25 @@ with col2:
     st.subheader("📝 Manuelle Eingabe")
     contract_text = st.text_area("Hier den Vertragstext eingeben", height=200)
 
-# 🔹 API-Schlüssel direkt im Code setzen (nur für Tests!)
-genai.configure(api_key="AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ")  # Ersetze "DEIN_API_KEY_HIER" mit deinem echten API-Schlüssel
+# 🔹 Text aus PDF extrahieren, falls eine Datei hochgeladen wurde
+if uploaded_file is not None:
+    if uploaded_file.type == "application/pdf":
+        try:
+            with pdfplumber.open(uploaded_file) as pdf:
+                contract_text = "\n".join([page.extract_text() for page in pdf.pages if page.extract_text()])
+            st.success("✅ Text aus PDF extrahiert!")
+        except Exception as e:
+            st.error(f"❌ Fehler beim Extrahieren des Textes: {e}")
+    else:
+        contract_text = uploaded_file.getvalue().decode("utf-8")
 
-# 🔹 Funktion zum Extrahieren von Text aus PDFs
-def extract_text_from_pdf(pdf_file):
-    text = ""
-    with pdfplumber.open(pdf_file) as pdf:
-        for page in pdf.pages:
-            text += page.extract_text() + "\n"
-    return text
+# 🔹 API-Schlüssel für Google Gemini KI
+api_key = "AIzaSyAreBEXHIDbUvjS7RWoqIVGgAETBcoWBKQ"  # 🔑 Hier deinen API-Schlüssel einfügen!
+genai.configure(api_key=api_key)
 
 # 🔹 KI-Analyse starten
 if st.button("🔎 Vertrag analysieren"):
-    if uploaded_file:  # Falls eine Datei hochgeladen wurde
-        if uploaded_file.type == "application/pdf":
-            contract_text = extract_text_from_pdf(uploaded_file)
-        else:
-            contract_text = uploaded_file.read().decode("utf-8")
-
-    if contract_text:  # Falls ein Vertragstext vorhanden ist
+    if contract_text:
         model = genai.GenerativeModel("gemini-pro")
         prompt = f"Bitte überprüfe den folgenden Bauvertrag und schlage Verbesserungen vor:\n\n{contract_text}"
         response = model.generate_content(prompt)
@@ -90,3 +96,4 @@ if st.button("🔎 Vertrag analysieren"):
         st.write(response.text)
     else:
         st.warning("⚠️ Bitte lade eine Datei hoch oder gib einen Vertrag ein!")
+
