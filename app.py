@@ -1,10 +1,6 @@
 import streamlit as st
 
-# Logo anzeigen
-st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
-import streamlit as st
-
-# 🌙 Dark Mode aktivieren & Primärfarbe ändern
+# ✅ Die Seitenkonfiguration muss als erstes stehen!
 st.set_page_config(
     page_title="Bauverträge smarter machen",
     page_icon="🏗",
@@ -12,7 +8,10 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Farben für Buttons & Text anpassen
+# ✅ Logo anzeigen
+st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
+
+# ✅ Farben für Dark Mode & Buttons anpassen
 st.markdown(
     """
     <style>
@@ -35,6 +34,12 @@ st.markdown(
     """,
     unsafe_allow_html=True
 )
+
+# ✅ Titel und Einführung
+st.title("Bauverträge smarter machen")
+st.write("Willkommen zu deiner KI-gestützten Vertragsanalyse!")
+
+# Dein bestehender Code (Chat-Funktion, Upload etc.) kommt hier...
 import streamlit as st
 import google.generativeai as genai
 
