@@ -1,5 +1,9 @@
 import streamlit as st
 
+# Logo anzeigen
+st.image("https://github.com/Agatha635/Vertragsanalyse/blob/main/logo.jpg?raw=true", width=200)
+import streamlit as st
+
 # 🌙 Dark Mode aktivieren & Primärfarbe ändern
 st.set_page_config(
     page_title="Bauverträge smarter machen",
